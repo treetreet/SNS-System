@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class EventHandler : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private PostUploader postUploader;
+    void GetEvent(string eventName)
     {
-        
+        //find event -> json
+        //throw json to postUploader
     }
 
-    // Update is called once per frame
-    void Update()
+    void UpdateJson()
     {
-        
+        //change json
+        //update post -> postUploader
     }
 }
