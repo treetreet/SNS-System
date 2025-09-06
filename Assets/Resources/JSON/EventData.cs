@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Resources.JSON
 {
-    [System.Serializable]
+    [Serializable]
     public class EventData
     {
         public enum EventType
@@ -20,7 +21,7 @@ namespace Resources.JSON
         public string content;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class EventDataList
     {
         public List<EventData> events;
