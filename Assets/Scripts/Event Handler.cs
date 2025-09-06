@@ -1,29 +1,95 @@
-using System;
-using UnityEditor.ShaderGraph.Serialization;
+using System.Collections.Generic;
 using UnityEngine;
-using Object = UnityEngine.Object;
-
+using Resources.JSON;
 
 public class EventHandler : MonoBehaviour
 {
     [SerializeField] private PostUploader postUploader;
-    private Object _jsonObject;
+
+    private EventDataList _eventDataList;
+    private PreconditionDataList _preconditionDataList;
+    private TagDataList _tagDataList;
+
+    private bool[] _processedEvents;
 
     private void Awake()
     {
-       // _jsonObject = Resources.Load<>("Resources/JSON/eventjson");
-        //Resources.Load<GameObject>("Resources/JSON/eventjson");
+        LoadEvents();
+        LoadPreconditions();
+        LoadTags();
     }
 
-    void GetEvent(string eventName)
+    #region Load JSON
+
+    void LoadEvents()
     {
-        //find event -> json
-        //throw json to postUploader
+        TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/event");
+        if (jsonFile != null)
+        {
+            _eventDataList = JsonUtility.FromJson<EventDataList>(jsonFile.text);
+            //Debug.Log(jsonFile.text); ok
+            Debug.Log("events count:" + _eventDataList.events.Count);
+
+            _processedEvents = new bool[_eventDataList.events.Count]; //초기 값은 모두 false
+        }
     }
 
-    void UpdateJson()
+    void LoadPreconditions()
     {
-        //change json
-        //update post -> postUploader
+        TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/precondition");
+        if (jsonFile != null)
+        {
+            _preconditionDataList = JsonUtility.FromJson<PreconditionDataList>(jsonFile.text);
+            //Debug.Log(jsonFile.text);  ok
+            Debug.Log("preconditions count:" + _preconditionDataList.preconditions.Count);
+        }
+    }
+
+    void LoadTags()
+    {
+        TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/tag");
+        if (jsonFile != null)
+        {
+            _tagDataList = JsonUtility.FromJson<TagDataList>(jsonFile.text);
+            //Debug.Log(jsonFile.text);  ok
+            Debug.Log("tags count:" + _tagDataList.tags.Count);
+        }
+    }
+
+    #endregion
+
+    /// <summary>
+    /// 이벤트를 받으면 precondition을 체크하고, postUploader로 이벤트 타입에 맞게 함수 호출을 함
+    /// </summary>
+    /// <param name="eventID"></param>
+    void GetEvent(string eventID)
+    {
+        //check precondition
+        if (!CheckPrecondition(eventID))
+        {
+            Debug.Log("precondition is not processed");
+            return;
+        }
+
+        List<EventData> eventList = _eventDataList.GetEvents(eventID);
+        
+        //throw json to postUploader by eventType **** 만들 부분
+    }
+
+    /// <summary>
+    /// 전제 조건으로 이전에 실행되어야 하는 이벤트가 실행되었는지 확인
+    /// </summary>
+    /// <param name="eventID"></param>
+    /// <returns>isProcessed</returns>
+    bool CheckPrecondition(string eventID)
+    {
+        if (int.TryParse(_preconditionDataList.GetPrecondition(eventID), out int precondition))
+        {
+            return _processedEvents[precondition];
+        }
+
+        //else
+        Debug.LogError("precondition ID is not string");
+        return false;
     }
 }

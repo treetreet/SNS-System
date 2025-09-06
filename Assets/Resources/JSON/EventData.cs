@@ -24,5 +24,19 @@ namespace Resources.JSON
     public class EventDataList
     {
         public List<EventData> events;
+
+        public List<EventData> GetEvents(string eventID)
+        {
+            List<EventData> eventList = new List<EventData>();
+            for (int i = 0; i < events.Count; i++)
+            {
+                if (events[i].eventID == eventID)
+                {
+                    eventList.Add(events[i]);
+                }
+            }
+            
+            return eventList;
+        }
     }
 }

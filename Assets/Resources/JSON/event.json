@@ -1,14 +1,14 @@
 {
-  "Event": [
+  "events": [
     {
-      "eventType": "add",
+      "eventType": 0,
       "eventID": "1",
       "postID": "1",
       "poster": "red",
       "content": "hungry"
     },
     {
-      "eventType": "add",
+      "eventType":  0,
       "eventID": "1",
       "postID": "2",
       "parentID": "1",
@@ -16,7 +16,7 @@
       "content": "eat something"
     },
     {
-      "eventType": "add",
+      "eventType": 0,
       "eventID": "1",
       "postID": "3",
       "parentID": "2",
@@ -25,27 +25,27 @@
       "content": "babo"
     },
     {
-      "eventType": "add",
+      "eventType": 0,
       "eventID": "2",
       "postID": "4",
       "poster": "red",
       "content": "i hate yellow"
     },
     {
-      "eventType": "edit",
+      "eventType": 1,
       "eventID": "3",
       "postID": "2",
       "poster": "green",
       "content": "eat yellow"
     },
     {
-      "eventType": "delete",
+      "eventType": 2,
       "eventID": "3",
       "postID": "3",
       "poster": "yellow"
     },
     {
-      "eventType": "add",
+      "eventType": 0,
       "eventID": "4",
       "postID": "5",
       "poster": "yellow",
