@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace Resources.JSON
 {
@@ -15,17 +16,18 @@ namespace Resources.JSON
     {
         public List<PreconditionData> preconditions;
 
-        public string GetPrecondition(string eventID)
+        public List<string> GetPrecondition(string eventID)
         {
+            List<string> preconditionStrings = new List<string>();
             for (int i = 0; i < preconditions.Count; i++)
             {
                 if (preconditions[i].eventID == eventID)
                 {
-                    return preconditions[i].precondition;
+                    preconditionStrings.Add(preconditions[i].precondition);
                 }
             }
             
-            return null;
+            return preconditionStrings;
         }
     }
 }

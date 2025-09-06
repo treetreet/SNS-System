@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Resources.JSON;
@@ -20,7 +21,6 @@ public class EventHandler : MonoBehaviour
     }
 
     #region Load JSON
-
     void LoadEvents()
     {
         TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/event");
@@ -83,13 +83,23 @@ public class EventHandler : MonoBehaviour
     /// <returns>isProcessed</returns>
     bool CheckPrecondition(string eventID)
     {
-        if (int.TryParse(_preconditionDataList.GetPrecondition(eventID), out int precondition))
+        List<String> preconditionStrings = _preconditionDataList.GetPrecondition(eventID);
+        //전제 조건이 없는 경우 true
+        if (preconditionStrings.Count == 0) return true;
+
+        //각 전제 조건을 탐색하며 모두 성립할 경우 true
+        foreach (string preconditionStr in preconditionStrings)
         {
-            return _processedEvents[precondition];
+            if (int.TryParse(preconditionStr, out int precondition))
+            {
+                if (_processedEvents[precondition] == false) return false;
+            }
+            else
+            {
+                Debug.LogError("event " + eventID + ": precondition ID is not string");
+            }
         }
 
-        //else
-        Debug.LogError("precondition ID is not string");
-        return false;
+        return true;
     }
 }
