@@ -1,16 +1,35 @@
+using Resources.JSON;
 using UnityEngine;
 
 public class PostUploader : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void UploadPost(EventData eventData)
     {
+        if (eventData.parentID != null)
+        {
+            
+        }
         
+        Debug.Log(eventData.postID + ": Upload Post!");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void EditPost(EventData eventData)
     {
+        if (eventData.parentID != null)
+        {
+            
+        }
+
+        Debug.Log(eventData.postID + ": Edit Post!");
+    }
+
+    public void DeletePost(EventData eventData)
+    {
+        if (eventData.parentID != null)
+        {
+            
+        }
         
+        Debug.Log(eventData.postID + ": Delete Post!");
     }
 }

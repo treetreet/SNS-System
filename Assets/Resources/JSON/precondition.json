@@ -1,18 +1,18 @@
 {
   "preconditions": [
     {
+      "eventID": "0"
+    },
+    {
       "eventID": "1"
     },
     {
-      "eventID": "2"
+      "eventID": "2",
+      "precondition": "0"
     },
     {
       "eventID": "3",
-      "precondition": "1"
-    },
-    {
-      "eventID": "4",
-      "precondition": "3"
+      "precondition": "2"
     }
   ]
 }

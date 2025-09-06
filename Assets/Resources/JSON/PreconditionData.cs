@@ -21,7 +21,7 @@ namespace Resources.JSON
             List<string> preconditionStrings = new List<string>();
             for (int i = 0; i < preconditions.Count; i++)
             {
-                if (preconditions[i].eventID == eventID)
+                if (preconditions[i].eventID == eventID && preconditions[i].precondition != null)
                 {
                     preconditionStrings.Add(preconditions[i].precondition);
                 }

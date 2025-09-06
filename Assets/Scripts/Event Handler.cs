@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Resources.JSON;
+using UnityEngine.Serialization;
 
+//processedEvent 배열이 preconditionDataList의 길이로 초기화됨.
+//만약 제대로 만든다면 hash를 써야 함.
 public class EventHandler : MonoBehaviour
 {
     [SerializeField] private PostUploader postUploader;
@@ -11,7 +14,7 @@ public class EventHandler : MonoBehaviour
     private PreconditionDataList _preconditionDataList;
     private TagDataList _tagDataList;
 
-    private bool[] _processedEvents;
+    [SerializeField] private bool[] tempProcessedEvents;
 
     private void Awake()
     {
@@ -29,8 +32,6 @@ public class EventHandler : MonoBehaviour
             _eventDataList = JsonUtility.FromJson<EventDataList>(jsonFile.text);
             //Debug.Log(jsonFile.text); ok
             Debug.Log("events count:" + _eventDataList.events.Count);
-
-            _processedEvents = new bool[_eventDataList.events.Count]; //초기 값은 모두 false
         }
     }
 
@@ -42,6 +43,8 @@ public class EventHandler : MonoBehaviour
             _preconditionDataList = JsonUtility.FromJson<PreconditionDataList>(jsonFile.text);
             //Debug.Log(jsonFile.text);  ok
             Debug.Log("preconditions count:" + _preconditionDataList.preconditions.Count);
+            
+            tempProcessedEvents = new bool[_preconditionDataList.preconditions.Count];  //초기 값은 모두 false & preconditions 설정 수정 필요. 필요 이상의 배열 값.
         }
     }
 
@@ -62,18 +65,38 @@ public class EventHandler : MonoBehaviour
     /// 이벤트를 받으면 precondition을 체크하고, postUploader로 이벤트 타입에 맞게 함수 호출을 함
     /// </summary>
     /// <param name="eventID"></param>
-    void GetEvent(string eventID)
+    public void GetEvent(string eventID)
     {
+        Debug.Log("event" + eventID + ": Get Event!");
         //check precondition
         if (!CheckPrecondition(eventID))
         {
-            Debug.Log("precondition is not processed");
+            Debug.Log("event" + eventID + ": precondition is not processed");
             return;
         }
-
+        
+        tempProcessedEvents[int.Parse(eventID)] = true;
         List<EventData> eventList = _eventDataList.GetEvents(eventID);
         
-        //throw json to postUploader by eventType **** 만들 부분
+        //throw jsonData(that object has) to postUploader by eventType
+        foreach (var eventData in eventList)
+        {
+            switch (eventData.eventType)
+            {
+                case EventData.EventType.Add :
+                    postUploader.UploadPost(eventData);
+                    break;
+                case EventData.EventType.Edit :
+                    postUploader.EditPost(eventData);
+                    break;
+                case EventData.EventType.Delete :
+                    postUploader.DeletePost(eventData);
+                    break;
+                default: 
+                    Debug.LogAssertion("eventType is not supported");
+                    break;
+            }
+        }
     }
 
     /// <summary>
@@ -81,7 +104,7 @@ public class EventHandler : MonoBehaviour
     /// </summary>
     /// <param name="eventID"></param>
     /// <returns>isProcessed</returns>
-    bool CheckPrecondition(string eventID)
+    private bool CheckPrecondition(string eventID)
     {
         List<String> preconditionStrings = _preconditionDataList.GetPrecondition(eventID);
         //전제 조건이 없는 경우 true
@@ -92,7 +115,7 @@ public class EventHandler : MonoBehaviour
         {
             if (int.TryParse(preconditionStr, out int precondition))
             {
-                if (_processedEvents[precondition] == false) return false;
+                if (tempProcessedEvents[precondition] == false) return false;
             }
             else
             {
