@@ -1,0 +1,16 @@
+{
+  "Tag": [
+    {
+      "poster": "red",
+      "tag": "@appleIsRed"
+    },
+    {
+      "poster": "green",
+      "tag": "@appleIsGreen"
+    },
+    {
+      "poster": "yellow",
+      "tag": "@IHaveYellow"
+    }
+  ]
+}
