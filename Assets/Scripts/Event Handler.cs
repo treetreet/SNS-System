@@ -1,55 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Resources.JSON;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
+using Scripts;
 
 //processedEvent 배열이 preconditionDataList의 길이로 초기화됨.
 //만약 제대로 만든다면 hash를 써야 함.
 public class EventHandler : MonoBehaviour
 {
     [SerializeField] private PostUploader postUploader;
-
-    private EventDataList _eventDataList;
-    private PreconditionDataList _preconditionDataList;
-
     [SerializeField] private bool[] tempProcessedEvents;
 
-    private void Awake()
+    private PreconditionDataList _preconditionDataList;
+    private EventDataList _eventDataList;
+    
+    private void Start()
     {
-        LoadEvents();
-        LoadPreconditions();
+        _preconditionDataList = DataManager.Instance.PreconditionDataList;
+        _eventDataList = DataManager.Instance.EventDataList;
+        
+        tempProcessedEvents = new bool[_preconditionDataList.preconditions.Count];  //초기 값은 모두 false & preconditions 설정 수정 필요. 필요 이상의 배열 값.
     }
-
-    #region Load JSON
-    void LoadEvents()
-    {
-        TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/event");
-        if (jsonFile != null)
-        {
-            _eventDataList = JsonUtility.FromJson<EventDataList>(jsonFile.text);
-            //Debug.Log(jsonFile.text); ok
-            Debug.Log("events count:" + _eventDataList.events.Count);
-        }
-    }
-
-    void LoadPreconditions()
-    {
-        TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/precondition");
-        if (jsonFile != null)
-        {
-            _preconditionDataList = JsonUtility.FromJson<PreconditionDataList>(jsonFile.text);
-            //Debug.Log(jsonFile.text);  ok
-            Debug.Log("preconditions count:" + _preconditionDataList.preconditions.Count);
-            
-            tempProcessedEvents = new bool[_preconditionDataList.preconditions.Count];  //초기 값은 모두 false & preconditions 설정 수정 필요. 필요 이상의 배열 값.
-        }
-    }
-
-   
-
-    #endregion
 
     /// <summary>
     /// 이벤트를 받으면 precondition을 체크하고, postUploader로 이벤트 타입에 맞게 함수 호출을 함

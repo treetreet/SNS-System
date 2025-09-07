@@ -1,5 +1,5 @@
-using System;
 using Resources.JSON;
+using Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,30 +12,13 @@ public class PostInfo : MonoBehaviour
     [SerializeField] TextMeshProUGUI posterName;
     [SerializeField] TextMeshProUGUI posterTag;
     [SerializeField] TextMeshProUGUI content;
-    
-    private TagDataList _tagDataList;
-
-    private void Awake()
-    {
-        LoadTags();
-    }
-
-    void LoadTags()
-    {
-        TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/tag");
-        if (jsonFile != null)
-        {
-            _tagDataList = JsonUtility.FromJson<TagDataList>(jsonFile.text);
-            //Debug.Log(jsonFile.text);  ok
-            Debug.Log("tags count:" + _tagDataList.tags.Count);
-        }
-    }
+    [SerializeField] private GameObject parentPost;
     
     public void ChangePostInfo(EventData eventData)
     {
         gameObject.name = eventData.postID;
         posterName.text = eventData.poster;
-        posterTag.text = _tagDataList.GetTag(eventData.poster);
+        posterTag.text = DataManager.Instance.TagDataList.GetTag(eventData.poster);
         switch (eventData.poster)
         {
             case "red": 
@@ -59,5 +42,31 @@ public class PostInfo : MonoBehaviour
         }
         
         content.text = eventData.content;
+    }
+
+    public void GetParentPostInfo(GameObject parent)
+    {
+        parentPost = parent;
+    }
+
+    /// <summary>
+    /// poster가 main인 경우 모두 active를 활성화. 그 외는 poster 이름에 따라 active를 활성화
+    /// </summary>
+    /// <param name="poster"></param>
+    public void ChangeActivePost(string poster)
+    {
+        if (poster == "main")
+        {
+            gameObject.SetActive(true);
+        }
+        else if (parentPost == null)
+        {
+            gameObject.SetActive(posterName.text == poster);
+        }
+        else
+        {
+            string parentPoster = parentPost.GetComponent<PostInfo>().posterName.text;
+            gameObject.SetActive(parentPoster == poster);
+        }
     }
 }

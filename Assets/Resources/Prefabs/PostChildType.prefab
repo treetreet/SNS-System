@@ -577,6 +577,7 @@ MonoBehaviour:
   posterName: {fileID: 3352073352733655343}
   posterTag: {fileID: 3085396579036901877}
   content: {fileID: 6340156976330199416}
+  parentPost: {fileID: 0}
 --- !u!1 &6218819821072390382
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +616,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 787.3894, y: -415.22998}
+  m_AnchoredPosition: {x: 787.3894, y: -395.12}
   m_SizeDelta: {x: 1126.6724, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8135437103285009643
