@@ -21,7 +21,7 @@
       "postID": "3",
       "parentID": "2",
       "poster": "yellow",
-      "image": "TestImage.jpg",
+      "image": "TestImage",
       "content": "babo"
     },
     {
@@ -29,7 +29,7 @@
       "eventID": "1",
       "postID": "4",
       "poster": "red",
-      "content": "i hate yellow"
+      "content": "I \nhate \nyellow\n;("
     },
     {
       "eventType": 1,

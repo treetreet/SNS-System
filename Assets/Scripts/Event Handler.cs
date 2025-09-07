@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Resources.JSON;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 //processedEvent 배열이 preconditionDataList의 길이로 초기화됨.
 //만약 제대로 만든다면 hash를 써야 함.
@@ -12,7 +13,6 @@ public class EventHandler : MonoBehaviour
 
     private EventDataList _eventDataList;
     private PreconditionDataList _preconditionDataList;
-    private TagDataList _tagDataList;
 
     [SerializeField] private bool[] tempProcessedEvents;
 
@@ -20,7 +20,6 @@ public class EventHandler : MonoBehaviour
     {
         LoadEvents();
         LoadPreconditions();
-        LoadTags();
     }
 
     #region Load JSON
@@ -48,16 +47,7 @@ public class EventHandler : MonoBehaviour
         }
     }
 
-    void LoadTags()
-    {
-        TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>("JSON/tag");
-        if (jsonFile != null)
-        {
-            _tagDataList = JsonUtility.FromJson<TagDataList>(jsonFile.text);
-            //Debug.Log(jsonFile.text);  ok
-            Debug.Log("tags count:" + _tagDataList.tags.Count);
-        }
-    }
+   
 
     #endregion
 
@@ -68,6 +58,9 @@ public class EventHandler : MonoBehaviour
     public void GetEvent(string eventID)
     {
         Debug.Log("event" + eventID + ": Get Event!");
+        //check processed
+        if (tempProcessedEvents[int.Parse(eventID)]) return;
+        
         //check precondition
         if (!CheckPrecondition(eventID))
         {

@@ -18,6 +18,7 @@ namespace Resources.JSON
         public string postID;
         public string parentID;
         public string poster;
+        public string image;
         public string content;
     }
 
